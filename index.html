@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Warm Neutrals & Playful Accents -->
     <!-- Application Structure Plan: A tabbed, card-based dashboard. This structure chunks the dense report into manageable, explorable sections (one for each app, plus 'Getting Started' and 'Safety'). This non-linear approach is more engaging for elementary students than a long scrolling page. The user flow is simple: click a card in the top navigation to display the corresponding content below. This prioritizes ease of use and self-directed learning. -->
-    <!-- Visualization & Content Choices: The core interaction is the tabbed navigation (HTML/JS) to organize content. For the 'Be Internet Awesome' section, a Chart.js polar area chart will be used. Each segment represents a safety principle. Clicking a segment will display its description. This transforms a static list into an interactive learning tool, making abstract concepts more concrete and memorable for young users. All other information is presented in styled text blocks, lists, and collapsible sections to maintain clarity and avoid overwhelming the user. -->
+    <!-- Visualization & Content Choices: The core interaction is the tabbed navigation (HTML/JS) to organize content. For the 'Be Internet Awesome' section, a Chart.js polar area chart will be used. Each segment represents a safety principle. Clicking a segment will display its description. This transforms a static list into an interactive learning tool, making abstract concepts more concrete and memorable for young users. All other information is presented in styled text blocks, lists, and collapsible sections to maintain clarity and avoid overwhelming the user. Video embeds have been added to relevant sections for enhanced understanding. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -44,7 +44,7 @@
             transition: max-height 0.5s ease-in-out;
         }
         .collapsible-content.show {
-            max-height: 1000px;
+            max-height: 1000px; /* Sufficiently large to cover content */
         }
         .chart-container {
             position: relative;
@@ -131,6 +131,13 @@
                                 <p>Don't try to reset it yourself! Go and ask your computer teacher for help. They are the only ones who can reset it for you.</p>
                             </div>
                         </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-gray-800">Watch: How to Log In!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_LOGIN" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
+                        </div>
                     </div>
                 `
             },
@@ -166,6 +173,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-green-800">Watch: A Tour of Google Classroom!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_CLASSROOM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
+                        </div>
                     </div>
                 `
             },
@@ -196,6 +210,13 @@
                                 <p>Only open emails from people you know, like your teachers and classmates. If you get an email from someone you don't know, tell an adult right away!</p>
                             </div>
                         </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-red-800">Watch: How to Send an Email!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_GMAIL" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
+                        </div>
                     </div>
                 `
             },
@@ -223,6 +244,13 @@
                                 <p class="font-bold">Rule for Chatting: Be Kind!</p>
                                 <p>Always be kind and respectful in your messages. Treat others online the same way you would in the classroom.</p>
                             </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-teal-800">Watch: Using Google Chat!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_CHAT" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
                         </div>
                     </div>
                 `
@@ -257,6 +285,13 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-cyan-800">Watch: Joining a Google Meet!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_MEET" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
+                        </div>
                     </div>
                 `
             },
@@ -278,6 +313,13 @@
                                     <li><strong>Be kind in comments.</strong> If you see mean comments, tell an adult. Don't join in.</li>
                                 </ul>
                             </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="text-2xl font-bold text-center mb-4 text-pink-800">Watch: YouTube Kids & Safety Tips!</h4>
+                            <div class="aspect-video w-full max-w-2xl mx-auto rounded-lg overflow-hidden shadow-md">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER_YOUTUBE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">(Placeholder video - replace with actual tutorial)</p>
                         </div>
                     </div>
                 `
