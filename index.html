@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSF Google Apps Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Playful Accents -->
+    <!-- Application Structure Plan: A tabbed, card-based dashboard. This structure chunks the dense report into manageable, explorable sections (one for each app, plus 'Getting Started' and 'Safety'). This non-linear approach is more engaging for elementary students than a long scrolling page. The user flow is simple: click a card in the top navigation to display the corresponding content below. This prioritizes ease of use and self-directed learning. -->
+    <!-- Visualization & Content Choices: The core interaction is the tabbed navigation (HTML/JS) to organize content. For the 'Be Internet Awesome' section, a Chart.js polar area chart will be used. Each segment represents a safety principle. Clicking a segment will display its description. This transforms a static list into an interactive learning tool, making abstract concepts more concrete and memorable for young users. All other information is presented in styled text blocks, lists, and collapsible sections to maintain clarity and avoid overwhelming the user. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F7F4;
+            color: #4A4A4A;
+        }
+        .nav-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .nav-card.active {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 3px #4285F4;
+            background-color: #ffffff;
+        }
+        .content-section {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .collapsible-content.show {
+            max-height: 1000px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Victoria School Foundation</h1>
+            <p class="text-xl text-gray-600 mt-2">Your Google Apps Reference Guide</p>
+        </header>
+
+        <nav id="main-nav" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
+        </nav>
+
+        <main id="main-content">
+        </main>
+
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>Always remember to ask your computer teacher for help. Stay safe and be awesome online!</p>
+            <p>&copy; Victoria School Foundation</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const appData = {
+            welcome: {
+                title: '🚀 Welcome!',
+                icon: '👋',
+                color: 'bg-indigo-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-gray-800">Welcome to Your VSF Google Apps Adventure!</h2>
+                        <p class="mb-4">Imagine a special toolbox filled with amazing digital tools that help you learn, create, and share with your classmates and teachers. That's what Google Apps are! At VSF, we use them to help you with your schoolwork, talk to your teachers, and learn in new and exciting ways.</p>
+                        <p class="mb-4">This guide will help you use apps like Classroom, Gmail, Meet, and more. Click on the cards above to start exploring!</p>
+                        <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r-lg">
+                            <p class="font-bold">Remember:</p>
+                            <p>If you ever forget your password or get stuck, don't worry! Your computer teacher is always there to help you.</p>
+                        </div>
+                    </div>
+                `
+            },
+            start: {
+                title: 'Get Started',
+                icon: '🔑',
+                color: 'bg-gray-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-gray-800">Getting Started: Your VSF Account</h2>
+                        <p class="mb-6">Your school email is your special key to all of VSF's Google Apps. It's different from a personal email because it ends in <strong>@vsf.edu.ph</strong>. You must use this account for all your schoolwork.</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">How to Log In (Step-by-Step)</button>
+                                <div class="collapsible-content">
+                                    <ol class="list-decimal list-inside space-y-2 p-4 mt-2 bg-gray-50 rounded-lg">
+                                        <li>Open a web browser like Google Chrome.</li>
+                                        <li>Go to <strong>google.com</strong>.</li>
+                                        <li>Click the "Sign In" button in the top right corner.</li>
+                                        <li>Type your full VSF school email (e.g., yourname@vsf.edu.ph).</li>
+                                        <li>Enter your password.</li>
+                                        <li>If you see a choice, click <strong>"I'm A Student"</strong>.</li>
+                                        <li>You're in!</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg">
+                                <p class="font-bold">Forgot Your Password?</p>
+                                <p>Don't try to reset it yourself! Go and ask your computer teacher for help. They are the only ones who can reset it for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            classroom: {
+                title: 'Classroom',
+                icon: '📚',
+                color: 'bg-green-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-green-800">Google Classroom: Your Digital Learning Space</h2>
+                        <p class="mb-6">This is where your teachers will post assignments, lessons, and announcements. It helps keep all your schoolwork organized in one place.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">How to Join a Class</button>
+                                <div class="collapsible-content">
+                                    <p class="p-4 mt-2 bg-green-50 rounded-lg">Your teacher will usually add you to the class automatically. If they give you a class code, follow these steps:</p>
+                                    <ol class="list-decimal list-inside space-y-2 p-4 mt-2 bg-green-50 rounded-lg">
+                                        <li>Go to <strong>classroom.google.com</strong>.</li>
+                                        <li>Click the plus sign (+) in the top right corner.</li>
+                                        <li>Click "Join class".</li>
+                                        <li>Enter the class code from your teacher.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">Finding and Turning In Assignments</button>
+                                <div class="collapsible-content">
+                                    <ul class="list-disc list-inside space-y-2 p-4 mt-2 bg-green-50 rounded-lg">
+                                        <li>After you open your class, click on the <strong>"Classwork"</strong> tab at the top. This is where all your assignments are!</li>
+                                        <li>Click on an assignment to read the instructions.</li>
+                                        <li>When you're finished, always remember to click the <strong>"Turn in"</strong> or <strong>"Mark as done"</strong> button so your teacher knows you've completed it.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            gmail: {
+                title: 'Gmail',
+                icon: '✉️',
+                color: 'bg-red-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-red-800">Gmail: Sending & Receiving Messages</h2>
+                        <p class="mb-6">Gmail is your school email. You can use it to send messages to your teachers and classmates. Your school Gmail is safe: there are no ads and it blocks most junk mail.</p>
+                        <div class="space-y-4">
+                             <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-red-50 rounded-lg hover:bg-red-100 transition">How to Send an Email</button>
+                                <div class="collapsible-content">
+                                    <ol class="list-decimal list-inside space-y-2 p-4 mt-2 bg-red-50 rounded-lg">
+                                        <li>Go to <strong>gmail.com</strong>.</li>
+                                        <li>Click the big, colorful <strong>"Compose"</strong> button.</li>
+                                        <li>In the "To" box, type your teacher's email address.</li>
+                                        <li>In the "Subject" box, give your email a title (e.g., "Question about homework").</li>
+                                        <li>Write your message in the big white box.</li>
+                                        <li>Click the blue <strong>"Send"</strong> button.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg">
+                                <p class="font-bold">Safety Tip!</p>
+                                <p>Only open emails from people you know, like your teachers and classmates. If you get an email from someone you don't know, tell an adult right away!</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            chat: {
+                title: 'Chat',
+                icon: '💬',
+                color: 'bg-teal-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-teal-800">Google Chat: Quick Messages</h2>
+                        <p class="mb-6">Google Chat is for sending quick messages to your teachers or classmates. It's great for asking simple questions or working together on a project.</p>
+                        <div class="space-y-4">
+                             <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-teal-50 rounded-lg hover:bg-teal-100 transition">How to Start a Chat</button>
+                                <div class="collapsible-content">
+                                    <ol class="list-decimal list-inside space-y-2 p-4 mt-2 bg-teal-50 rounded-lg">
+                                        <li>Go to <strong>chat.google.com</strong>.</li>
+                                        <li>Click the plus sign (+) to start a new chat.</li>
+                                        <li>Type the name of the person you want to message.</li>
+                                        <li>Write your message in the box at the bottom and press Enter.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-r-lg">
+                                <p class="font-bold">Rule for Chatting: Be Kind!</p>
+                                <p>Always be kind and respectful in your messages. Treat others online the same way you would in the classroom.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            meet: {
+                title: 'Meet',
+                icon: '📹',
+                color: 'bg-cyan-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-cyan-800">Google Meet: Video Calls for Class</h2>
+                        <p class="mb-6">Meet is like a virtual classroom where you can see and hear your teacher and classmates for online lessons.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <button class="collapsible-trigger w-full text-left font-bold text-xl p-4 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition">How to Join a Meeting</button>
+                                <div class="collapsible-content">
+                                    <ol class="list-decimal list-inside space-y-2 p-4 mt-2 bg-cyan-50 rounded-lg">
+                                        <li>Your teacher will give you a link, often in Google Classroom.</li>
+                                        <li>Click the link to open Meet.</li>
+                                        <li>Allow Meet to use your camera and microphone.</li>
+                                        <li>Make sure you are signed in with your <strong>@vsf.edu.ph</strong> account!</li>
+                                        <li>Click <strong>"Join now"</strong>.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r-lg">
+                                <p class="font-bold">Tips for a Good Call</p>
+                                <ul class="list-disc list-inside mt-2">
+                                    <li><strong>Mute your mic</strong> when you're not talking to reduce noise.</li>
+                                    <li>Find a quiet place to join the call.</li>
+                                    <li>Use the "raise hand" button if you have a question.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            youtube: {
+                title: 'YouTube',
+                icon: '📺',
+                color: 'bg-pink-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-pink-800">YouTube: Learning & Exploring Safely</h2>
+                        <p class="mb-6">Your teachers might share learning videos from YouTube. You can also use it to explore your hobbies, but it's very important to stay safe.</p>
+                        <div class="space-y-4">
+                            <div class="bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg">
+                                <p class="font-bold">Top Safety Rules for YouTube</p>
+                                <ul class="list-disc list-inside mt-2">
+                                    <li><strong>Ask an adult first!</strong> If you're not sure about a video, ask a parent or teacher before you click.</li>
+                                    <li><strong>Use YouTube Kids.</strong> It's a separate app with safer, family-friendly videos.</li>
+                                    <li><strong>Never share personal information</strong> like your full name, address, or phone number.</li>
+                                    <li><strong>Be kind in comments.</strong> If you see mean comments, tell an adult. Don't join in.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            safety: {
+                title: 'Be Awesome',
+                icon: '🛡️',
+                color: 'bg-purple-100',
+                content: `
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-3xl font-bold mb-4 text-purple-800">Be Internet Awesome!</h2>
+                        <p class="mb-6">Being a good digital citizen means being safe, respectful, and smart online. Click on the sections of the chart below to learn the 5 rules of being Internet Awesome!</p>
+                        <div class="md:flex md:items-center md:space-x-6">
+                            <div class="chart-container flex-shrink-0">
+                                <canvas id="safetyChart"></canvas>
+                            </div>
+                            <div id="safetyInfo" class="mt-6 md:mt-0 flex-grow p-4 bg-purple-50 rounded-lg min-h-[150px]">
+                                <h3 id="safetyInfoTitle" class="text-2xl font-bold text-purple-700">Click the Chart!</h3>
+                                <p id="safetyInfoText" class="mt-2">Learn how to be safe and kind online.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-bold mb-4 text-center">Online Safety Checklist</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg text-green-800 mb-2">✅ Do This!</h4>
+                                    <ul class="list-disc list-inside space-y-2">
+                                        <li>Use your VSF school email for school apps.</li>
+                                        <li>Tell a trusted adult if anything online makes you feel weird or worried.</li>
+                                        <li>Be kind and respectful in all chats and emails.</li>
+                                        <li>Think before you post anything.</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg">
+                                    <h4 class="font-bold text-lg text-red-800 mb-2">❌ Don't Do This!</h4>
+                                    <ul class="list-disc list-inside space-y-2">
+                                        <li>Share your password with anyone (except parents).</li>
+                                        <li>Share your real name, address, or phone number.</li>
+                                        <li>Open emails or click links from people you don't know.</li>
+                                        <li>Be mean or bully anyone online.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+        };
+
+        const safetyChartData = {
+            labels: ['Smart', 'Alert', 'Strong', 'Kind', 'Brave'],
+            descriptions: {
+                'Smart': {
+                    title: 'Be Internet Smart: Share with Care',
+                    text: 'Think before you post. Only share things online that you would be okay with everyone seeing. Remember, what you post can stay online forever!'
+                },
+                'Alert': {
+                    title: 'Be Internet Alert: Don\'t Fall for Fake',
+                    text: 'Be aware that not everything you see online is true. If an email, message, or website looks strange, it might be a trick. Tell a trusted adult.'
+                },
+                'Strong': {
+                    title: 'Be Internet Strong: Secure Your Secrets',
+                    text: 'Your password is like the key to your house. Keep it safe and private! Don\'t share it with friends. Make it hard for others to guess.'
+                },
+                'Kind': {
+                    title: 'Be Internet Kind: It\'s Cool to Be Kind',
+                    text: 'Treat others online how you want to be treated. Use positive words. If you see someone being mean, don\'t join in. Block them and tell an adult.'
+                },
+                'Brave': {
+                    title: 'Be Internet Brave: When in Doubt, Talk It Out',
+                    text: 'If you see anything online that makes you feel uncomfortable, sad, or worried, be brave and tell a trusted adult, like your parents or your computer teacher.'
+                }
+            }
+        };
+
+        const mainNav = document.getElementById('main-nav');
+        const mainContent = document.getElementById('main-content');
+        let safetyChartInstance = null;
+        let activeCard = null;
+
+        function showSection(sectionKey) {
+            const section = appData[sectionKey];
+            if (!section) return;
+
+            mainContent.innerHTML = section.content;
+            
+            const newActiveCard = document.querySelector(`[data-section="${sectionKey}"]`);
+            if (activeCard) {
+                activeCard.classList.remove('active');
+                const oldColor = appData[activeCard.dataset.section].color;
+                activeCard.classList.add(oldColor);
+                activeCard.classList.remove('bg-white');
+            }
+            if(newActiveCard) {
+                newActiveCard.classList.add('active');
+                newActiveCard.classList.remove(section.color);
+                newActiveCard.classList.add('bg-white');
+                activeCard = newActiveCard;
+            }
+
+            if (sectionKey === 'safety') {
+                renderSafetyChart();
+            }
+            
+            document.querySelectorAll('.collapsible-trigger').forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    content.classList.toggle('show');
+                });
+            });
+        }
+
+        function renderSafetyChart() {
+            const ctx = document.getElementById('safetyChart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (safetyChartInstance) {
+                safetyChartInstance.destroy();
+            }
+
+            safetyChartInstance = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: safetyChartData.labels,
+                    datasets: [{
+                        label: 'Be Internet Awesome',
+                        data: [1, 1, 1, 1, 1],
+                        backgroundColor: [
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            display: false
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true,
+                        }
+                    },
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const clickedIndex = elements[0].index;
+                            const clickedLabel = safetyChartData.labels[clickedIndex];
+                            const info = safetyChartData.descriptions[clickedLabel];
+
+                            document.getElementById('safetyInfoTitle').textContent = info.title;
+                            document.getElementById('safetyInfoText').textContent = info.text;
+                        }
+                    }
+                }
+            });
+        }
+
+        function init() {
+            const sections = ['welcome', 'start', 'classroom', 'gmail', 'chat', 'meet', 'youtube', 'safety'];
+            const fragment = document.createDocumentFragment();
+
+            sections.forEach(key => {
+                const sectionData = appData[key];
+                if (!sectionData) return;
+
+                const card = document.createElement('div');
+                card.className = `nav-card ${sectionData.color} p-4 rounded-lg cursor-pointer text-center flex flex-col items-center justify-center h-28`;
+                card.dataset.section = key;
+                card.innerHTML = `
+                    <span class="text-4xl">${sectionData.icon}</span>
+                    <span class="font-semibold text-sm mt-2">${sectionData.title}</span>
+                `;
+                card.addEventListener('click', () => showSection(key));
+                fragment.appendChild(card);
+            });
+            
+            mainNav.appendChild(fragment);
+
+            showSection('welcome');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
